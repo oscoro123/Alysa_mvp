@@ -31,16 +31,26 @@
         #left-panel { background: #151e32; border-right: 1px solid #1e293b; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         #right-panel { background: #0b1121; overflow-y: auto; position: relative; }
 
-        .logo-img { height: 32px; width: auto; object-fit: contain; }
+        /* LOGO & HEADER - Ljusare bakgrund, ingen filter på loggan */
+        .navbar-bg { background-color: #1e3a5f; } /* Ljusare slate-blå */
+        .logo-img { 
+            height: 36px; /* Något större */
+            width: auto; 
+            object-fit: contain; 
+            /* filter: brightness(0) invert(1);  <-- BORTTAGET för att visa loggans färg */
+        }
         .hidden-input { display: none !important; }
 
-        /* VIEWERS */
-        #file-navigator { background: #0f172a; border-bottom: 1px solid #1e293b; display: flex; overflow-x: auto; height: 44px; align-items: center; }
-        .file-tab { padding: 0 16px; height: 100%; display: flex; align-items: center; color: #64748b; font-size: 11px; font-weight: 600; cursor: pointer; border-right: 1px solid #1e293b; white-space: nowrap; }
-        .file-tab:hover { background: #1e293b; color: #e2e8f0; }
+        /* NAVIGATOR */
+        #file-navigator { background: #1e3a5f; border-bottom: 1px solid #2d4a77; display: flex; overflow-x: auto; height: 44px; align-items: center; }
+        .file-tab { padding: 0 16px; height: 100%; display: flex; align-items: center; color: #94a3b8; font-size: 11px; font-weight: 600; cursor: pointer; border-right: 1px solid #2d4a77; white-space: nowrap; }
+        .file-tab:hover { background: #2d4a77; color: #ffffff; }
 
         #viewer-scroll-area { flex: 1; overflow-y: auto; padding: 40px; outline: none; scroll-behavior: smooth; }
         
+        #content-container { position: relative; }
+
+        /* DOCX CONTAINER */
         .doc-view-container { 
             background: #ffffff; 
             color: #1e293b; 
@@ -50,31 +60,80 @@
             margin: 0 auto; 
             font-family: 'Georgia', serif; 
             font-size: 15px; 
-            line-height: 1.8; 
+            line-height: 1.6; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
             border-radius: 2px;
-            white-space: pre-wrap; /* Viktigt för att behålla radbrytningar */
-        }
-        
-        /* HÄR ÄR DEN NYA MARKERINGS-STILEN */
-        .precise-highlight {
-            background-color: #fef08a; /* Ljusgul */
-            border-bottom: 3px solid #ef4444; /* Tydligt rött streck */
-            color: #000;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            box-shadow: 0 0 10px rgba(254, 240, 138, 0.5);
-            animation: pop-in 0.3s ease-out forwards;
-        }
-        
-        @keyframes pop-in {
-            0% { transform: scale(1); background-color: #ef4444; color: white; }
-            100% { transform: scale(1); background-color: #fef08a; color: black; }
+            white-space: pre-wrap; 
+            position: relative; 
         }
 
-        .pdf-page { margin: 0 auto 20px auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
-        .textLayer { position: absolute; inset: 0; opacity: 0.2; line-height: 1.0; mix-blend-mode: multiply; }
-        .file-separator { margin-top: 60px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; color: #2563eb; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        /* --- PDF CSS --- */
+        .pdf-page { 
+            margin: 0 auto 20px auto; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        .pdf-page canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .textLayer { 
+            position: absolute; 
+            inset: 0; 
+            opacity: 1; 
+            line-height: 1.0; 
+            transform-origin: 0 0; 
+            z-index: 2;
+        }
+
+        .textLayer span {
+            color: transparent;
+            position: absolute;
+            white-space: pre; 
+            cursor: text;
+            transform-origin: 0% 0%;
+        }
+        
+        .textLayer ::selection, .doc-view-container ::selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: inherit;
+        }
+
+        /* --- MARKERINGAR (OVERLAY) --- */
+        .highlight-overlay {
+            position: absolute;
+            background-color: rgba(254, 240, 138, 0.5); /* Gul */
+            border-bottom: 3px solid #ef4444; /* Röd */
+            pointer-events: none;
+            z-index: 10;
+            mix-blend-mode: multiply;
+            animation: pop-in 0.3s ease-out;
+        }
+
+        @keyframes pop-in {
+            0% { transform: scaleY(0); opacity: 0; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        /* ZIP HEADER NAVIGATION I TEXTEN */
+        .file-separator { 
+            margin-top: 80px; 
+            margin-bottom: 20px; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #e2e8f0; 
+            color: #2563eb; 
+            font-family: 'Inter', sans-serif; 
+            font-weight: 700; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            scroll-margin-top: 60px; 
+        }
 
         /* CARDS */
         .req-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); border-left-width: 4px; padding: 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 12px; }
@@ -97,13 +156,10 @@
 </head>
 <body class="flex flex-col antialiased selection:bg-blue-500 selection:text-white">
 
-    <nav class="h-16 border-b border-slate-800 bg-slate-900 flex items-center justify-between px-6 z-20 sticky top-0">
-        <div class="flex items-center gap-4">
-            <h1 class="font-bold text-xl text-white tracking-tight">Alysa</h1>
-            <div class="h-6 w-[1px] bg-slate-700 mx-1"></div>
+    <nav class="h-16 border-b border-slate-800 navbar-bg flex items-center justify-between px-6 z-20 sticky top-0">
+        <div class="flex items-center gap-3">
             <img src="alysa-logo.png" alt="Logo" class="logo-img">
-            <div class="h-6 w-[1px] bg-slate-700 mx-1"></div>
-            <p class="text-[10px] text-blue-400 font-mono tracking-widest font-semibold uppercase pt-1">Construction Intelligence</p>
+            <p class="text-[10px] text-blue-300 font-mono tracking-widest font-semibold uppercase pt-1">Construction Intelligence</p>
         </div>
         <div class="flex gap-4">
              <input type="file" id="fileInput" accept=".pdf,.zip,.docx,.xlsx" class="hidden-input" onchange="handleFile(this.files[0])">
@@ -179,12 +235,17 @@
             document.getElementById('content-container').innerHTML = "";
             document.getElementById('results').classList.add('hidden');
             document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('file-navigator').classList.add('hidden');
+            
+            const nav = document.getElementById('file-navigator');
+            nav.innerHTML = "";
+            nav.classList.add('hidden');
 
             if (file.name.endsWith('.pdf')) {
                 isTextMode = false;
                 const ab = await file.arrayBuffer();
                 renderPDF(ab);
+            } else {
+                isTextMode = true; 
             }
 
             const formData = new FormData();
@@ -197,7 +258,8 @@
                 if (data.error) throw new Error(data.error);
 
                 if (data.extracted_text_view) {
-                    isTextMode = true;
+                    isTextMode = true; 
+                    // Skicka med fillistan om den finns (för ZIP)
                     renderTextView(data.extracted_text_view, data.file_list);
                 }
 
@@ -221,35 +283,66 @@
                 div.className = 'pdf-page';
                 div.style.width = `${viewport.width}px`;
                 div.style.height = `${viewport.height}px`;
+                
                 const canvas = document.createElement('canvas');
                 canvas.width = viewport.width; canvas.height = viewport.height;
                 div.appendChild(canvas);
+                
                 const textLayer = document.createElement('div');
                 textLayer.className = 'textLayer';
                 div.appendChild(textLayer);
+                
                 container.appendChild(div);
+                
                 await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
                 const tc = await page.getTextContent();
                 pdfjsLib.renderTextLayer({ textContentSource: tc, container: textLayer, viewport, textDivs: [] });
             }
         }
 
+        // --- FIXAD TEXT RENDERARE: Städning + Robust Index-baserad Navigering ---
         function renderTextView(text, files) {
             const container = document.getElementById('content-container');
             const nav = document.getElementById('file-navigator');
-            
-            let formattedText = escapeHtml(text).replace(
-                /={40}\n📄 DOKUMENT: (.*?)\n={40}/g, 
-                (match, filename) => `<div id="file-${filename.replace(/[^a-zA-Z0-9]/g, '_')}" class="file-separator"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> ${filename}</div>`
-            );
-            container.innerHTML = `<div id="text-doc-body" class="doc-view-container">${formattedText}</div>`;
+            container.innerHTML = ""; // Rensa först
+            nav.innerHTML = ""; // Rensa menyn
 
-            if (files && files.length > 0) {
+            // 1. STÄDA TEXTEN: Kollapsa 3 eller fler radbrytningar till max 2
+            let cleanText = text.replace(/\n{3,}/g, '\n\n'); 
+
+            // 2. DELA UPP TEXTEN BASERAT PÅ SEPARATORN
+            // Detta skapar en array: [ "", "Filnamn1", "Innehåll1", "Filnamn2", "Innehåll2", ... ]
+            const parts = cleanText.split(/={40}\n📄 DOKUMENT: (.*?)\n={40}/g);
+
+            let finalHtml = "";
+            let navHtml = "";
+            let docIndex = 0;
+
+            // Loopa igenom delarna (hoppa över första tomma, ta filnamn och innehåll i par)
+            for (let i = 1; i < parts.length; i += 2) {
+                const filename = parts[i].trim();
+                let content = parts[i+1];
+                
+                // Skapa ett säkert, unikt ID baserat på index
+                const safeId = `doc-idx-${docIndex}`;
+
+                // Bygg HTML för texten med ankare
+                finalHtml += `<div id="${safeId}" class="file-separator"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> ${filename}</div>`;
+                finalHtml += escapeHtml(content); // Escape:a innehållet
+
+                // Bygg HTML för menyknappen med samma ID
+                navHtml += `<div class="file-tab" onclick="document.getElementById('${safeId}').scrollIntoView({behavior:'smooth', block:'start'})">📄 ${filename}</div>`;
+
+                docIndex++;
+            }
+
+            // Sätt in allt i containern
+            container.innerHTML = `<div id="text-doc-body" class="doc-view-container">${finalHtml}</div>`;
+
+            // Visa menyn om det fanns filer
+            if (docIndex > 0) {
                 nav.classList.remove('hidden');
-                nav.innerHTML = files.map(f => {
-                    const cleanId = f.replace(/[^a-zA-Z0-9]/g, '_');
-                    return `<div class="file-tab" onclick="document.getElementById('file-${cleanId}').scrollIntoView({behavior:'smooth', block:'start'})">📄 ${f}</div>`;
-                }).join('');
+                nav.innerHTML = navHtml;
             }
         }
 
@@ -267,14 +360,12 @@
             const createCard = (item, type) => {
                 const isRisk = type === 'risk';
                 const isSkall = item.classification === 'SKALL';
-                
                 let cardClass = isRisk ? 'card-risk' : (isSkall ? 'card-skall' : 'card-bor');
                 let badgeClass = isRisk ? 'badge-skall' : (isSkall ? 'badge-skall' : 'badge-bor');
                 let label = isRisk ? `RISK (${item.severity})` : (isSkall ? "SKALL" : "BÖR");
 
                 const div = document.createElement('div');
                 div.className = `req-card ${cardClass}`;
-                
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
                         <span class="badge ${badgeClass}">${label}</span>
@@ -285,7 +376,13 @@
                     <div class="text-xs font-medium text-slate-200 mb-2 leading-relaxed">"${item.text}"</div>
                     <div class="text-[10px] text-slate-500 italic pt-1">${item.reasoning}</div>
                 `;
-                div.onclick = () => highlightTextInContainer(item.text);
+                div.onclick = () => {
+                    if (isTextMode) {
+                        highlightDOCX(item.text);
+                    } else {
+                        highlightPDF(item.text);
+                    }
+                };
                 return div;
             };
 
@@ -296,82 +393,157 @@
             }
         }
 
-        // --- DETTA ÄR DEN NYA FIXEN (WRAPPING) ---
-        function highlightTextInContainer(snippet) {
-            // PDF: Legacy highlight (fungerar ok för PDF)
-            if (!isTextMode) {
-                const cleanSnippet = snippet.toLowerCase().replace(/[\s\n\r]+/g, '');
-                const spans = document.querySelectorAll('.textLayer span');
-                let found = false;
-                spans.forEach(s => s.style.backgroundColor = ''); // Rensa
-                for (let s of spans) {
-                    const txt = s.textContent.toLowerCase().replace(/[\s\n\r]+/g, '');
-                    if (txt.includes(cleanSnippet) || cleanSnippet.includes(txt)) {
-                        s.style.backgroundColor = '#fef08a';
-                        if (!found) { s.scrollIntoView({behavior:'smooth', block:'center'}); found = true; }
-                    }
-                }
-                if (!found) alert("Hittade inte exakt text i PDF:en.");
-                return;
-            }
-
-            // DOCX/TEXT: The "Surround" Method
+        // =======================================================
+        // METOD 1: DOCX HIGHLIGHTING (SEGMENTERAD SÖKNING)
+        // =======================================================
+        function highlightDOCX(snippet) {
             const container = document.getElementById('text-doc-body');
             if (!container) return;
+            
+            document.querySelectorAll('.highlight-overlay').forEach(el => el.remove());
+
             document.getElementById('viewer-scroll-area').focus();
-
-            // 1. Rensa gamla markeringar (genom att ta bort span-taggen men behålla texten)
-            const oldSpans = container.querySelectorAll('.precise-highlight');
-            oldSpans.forEach(span => {
-                const parent = span.parentNode;
-                parent.replaceChild(document.createTextNode(span.textContent), span);
-                parent.normalize(); // Slå ihop textnoder
-            });
-
-            // 2. Sökstrategier (Exakt -> Utan radbrytning -> Första halvan)
-            const range = document.createRange();
-            range.selectNodeContents(container);
-            range.collapse(true);
             const sel = window.getSelection();
             sel.removeAllRanges();
-            sel.addRange(range);
 
-            let found = window.find(snippet, false, false, true); // Exakt
+            const cleanSnippet = snippet.replace(/^[\s\u2022\*\-\d\.]+/g, '').trim();
 
+            let found = window.find(cleanSnippet, false, false, true); 
+            
             if (!found) {
-                sel.removeAllRanges(); sel.addRange(range);
-                const flatSnippet = snippet.replace(/[\n\r]+/g, " ");
-                found = window.find(flatSnippet, false, false, true); // Utan radbrytning
+                found = window.find(cleanSnippet.replace(/[\n\r]+/g, " "), false, false, true);
             }
-            if (!found) {
-                sel.removeAllRanges(); sel.addRange(range);
-                const shortSnippet = snippet.substring(0, 50);
-                found = window.find(shortSnippet, false, false, true); // Första 50 tecknen
+            
+            if (!found && cleanSnippet.length > 30) {
+                const startSnippet = cleanSnippet.substring(0, 25);
+                sel.removeAllRanges(); const range = document.createRange(); range.selectNodeContents(container); range.collapse(true); sel.addRange(range);
+                found = window.find(startSnippet, false, false, true);
             }
 
-            // 3. OM HITTAT: Skapa en exakt markering runt texten (inte containern!)
+            if (!found && cleanSnippet.length > 50) {
+                const midSnippet = cleanSnippet.substring(20, 50);
+                sel.removeAllRanges(); const range = document.createRange(); range.selectNodeContents(container); range.collapse(true); sel.addRange(range);
+                found = window.find(midSnippet, false, false, true);
+            }
+
+            if (!found && cleanSnippet.length > 30) {
+                const endSnippet = cleanSnippet.substring(cleanSnippet.length - 25);
+                sel.removeAllRanges(); const range = document.createRange(); range.selectNodeContents(container); range.collapse(true); sel.addRange(range);
+                found = window.find(endSnippet, false, false, true);
+            }
+
             if (found) {
-                const foundRange = window.getSelection().getRangeAt(0);
+                const range = window.getSelection().getRangeAt(0);
+                const rects = range.getClientRects();
+                const containerRect = container.getBoundingClientRect();
                 
-                // Skapa elementet som ska vira in texten
-                const highlightSpan = document.createElement("span");
-                highlightSpan.className = "precise-highlight";
+                let firstOverlay = null;
+
+                for (const rect of rects) {
+                    const div = document.createElement('div');
+                    div.className = 'highlight-overlay';
+                    div.style.top = `${rect.top - containerRect.top}px`;
+                    div.style.left = `${rect.left - containerRect.left}px`;
+                    div.style.width = `${rect.width}px`;
+                    div.style.height = `${rect.height}px`;
+                    container.appendChild(div);
+                    if (!firstOverlay) firstOverlay = div;
+                }
                 
-                // Vira in texten
-                try {
-                    foundRange.surroundContents(highlightSpan);
-                    
-                    // Scrolla dit
-                    highlightSpan.scrollIntoView({behavior: "smooth", block: "center"});
-                    
-                    // Rensa den fula blå browser-markeringen
-                    window.getSelection().removeAllRanges();
-                } catch (e) {
-                    console.log("Kunde inte vira in texten (kan korsa HTML-taggar). Faller tillbaka på scroll.", e);
-                    foundRange.startContainer.parentElement.scrollIntoView({behavior: "smooth", block: "center"});
+                sel.removeAllRanges();
+
+                if (firstOverlay) {
+                    firstOverlay.scrollIntoView({behavior: "smooth", block: "center"});
                 }
             } else {
-                alert("Kunde inte hitta texten automatiskt.");
+                alert("Hittade inte texten exakt. (Dokumentet kan ha oväntade radbrytningar).");
+            }
+        }
+
+        // =======================================================
+        // METOD 2: PDF HIGHLIGHTING (ORÖRD)
+        // =======================================================
+        function highlightPDF(snippet) {
+            const container = document.getElementById('content-container');
+            if (!container) return;
+            
+            document.querySelectorAll('.highlight-overlay').forEach(el => el.remove());
+
+            const cleanText = (txt) => txt.replace(/[\(\)\[\]\.\,\:\;\-\u2022\*\d]/g, ' ').toLowerCase();
+            const searchWords = cleanText(snippet).split(/\s+/).filter(w => w.length > 2);
+
+            if (searchWords.length === 0) return;
+
+            const pdfStream = [];
+            document.querySelectorAll('.textLayer span').forEach(span => {
+                const words = cleanText(span.textContent).split(/\s+/);
+                words.forEach(w => {
+                    if (w.length > 2) {
+                        pdfStream.push({ word: w, span: span });
+                    }
+                });
+            });
+
+            let bestMatch = { startIndex: -1, score: 0 };
+            
+            for (let i = 0; i < pdfStream.length; i++) {
+                if (pdfStream[i].word.includes(searchWords[0]) || searchWords[0].includes(pdfStream[i].word)) {
+                    let currentScore = 0;
+                    let lookAhead = Math.min(searchWords.length + 10, pdfStream.length - i);
+                    
+                    for (let j = 0; j < lookAhead; j++) {
+                        if (searchWords.includes(pdfStream[i+j].word)) {
+                            currentScore++;
+                        }
+                    }
+
+                    const matchPercentage = currentScore / searchWords.length;
+                    if (matchPercentage > 0.6 && matchPercentage > bestMatch.score) {
+                        bestMatch = { startIndex: i, score: matchPercentage };
+                    }
+                }
+            }
+
+            if (bestMatch.startIndex !== -1) {
+                const spansToHighlight = new Set();
+                
+                let matchedWordsCount = 0;
+                let endIndex = bestMatch.startIndex;
+                let maxLoop = Math.min(pdfStream.length, bestMatch.startIndex + searchWords.length + 20);
+
+                for (let k = bestMatch.startIndex; k < maxLoop; k++) {
+                    const currentPdfWord = pdfStream[k].word;
+                    if (searchWords.includes(currentPdfWord)) {
+                        matchedWordsCount++;
+                        endIndex = k; 
+                    }
+                    if (matchedWordsCount >= searchWords.length) break;
+                }
+
+                for (let k = bestMatch.startIndex; k <= endIndex; k++) {
+                    spansToHighlight.add(pdfStream[k].span);
+                }
+
+                let firstSpan = null;
+                spansToHighlight.forEach(span => {
+                    if (!firstSpan) firstSpan = span;
+                    const rect = span.getBoundingClientRect();
+                    let parentPage = span.closest('.pdf-page');
+                    if (parentPage) {
+                        const pageRect = parentPage.getBoundingClientRect();
+                        const div = document.createElement('div');
+                        div.className = 'highlight-overlay';
+                        div.style.top = `${rect.top - pageRect.top}px`;
+                        div.style.left = `${rect.left - pageRect.left}px`;
+                        div.style.width = `${rect.width}px`;
+                        div.style.height = `${rect.height}px`;
+                        parentPage.appendChild(div);
+                    }
+                });
+
+                if (firstSpan) firstSpan.scrollIntoView({behavior: "smooth", block: "center"});
+            } else {
+                alert("Kunde inte hitta exakt plats (texten kan vara fragmenterad).");
             }
         }
 
